@@ -1,4 +1,4 @@
-<?php include 'index2.php' ?>
+<?php include 'fluff.php' ?>
 
 <?php get_products(); ?>
 

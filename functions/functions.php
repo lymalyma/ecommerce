@@ -1,8 +1,6 @@
 <?php
 
-$con = mysqli_connect("localhost", "root", "root", "ecommerce");
-
-$stockpiler = mysqli_connect("localhost", "root", "root", "stockpiler");
+$con = mysqli_connect("localhost", "root", "root", "BorkShop");
 
 
 if (mysqli_connect_errno()) {
@@ -24,11 +22,11 @@ function getIp() {
 function get_cats() {
 
   global $con;
-  $get_cats = "select * from categories";
+  $get_cats = "select * from category";
   $run_cats = mysqli_query($con, $get_cats);
   while ($row_cats=mysqli_fetch_array($run_cats)) {
     $cat_id = $row_cats['cat_id'];
-    $cat_title = $row_cats['cat_title'];
+    $cat_title = $row_cats['cat_name'];
     echo "<li><a href='index.php?cat=$cat_id'>$cat_title</a></li>";
   }
 }
@@ -36,11 +34,11 @@ function get_cats() {
 function get_brands() {
 
   global $con;
-  $get_brands = "select * from brands";
+  $get_brands = "select * from brand";
   $run_brands = mysqli_query($con, $get_brands);
   while ($row_cats=mysqli_fetch_array($run_brands)) {
     $brand_id = $row_cats['brand_id'];
-    $brand_title = $row_cats['brand_title'];
+    $brand_title = $row_cats['brand_name'];
     echo "<li><a href='index.php?brand=$brand_id'>$brand_title</a></li>";
   }
 }
@@ -51,18 +49,15 @@ function get_products() {
 
 
       global $con;
-      $get_pro = "select * from products";
+      $get_pro = "select * from product";
       $run_pro = mysqli_query($con, $get_pro);
 
       while ($row_pro = mysqli_fetch_array($run_pro)) {
         $prod_id = $row_pro['product_id'];
-        $prod_cat = $row_pro['product_cat'];
-        $prod_brand = $row_pro['product_brand'];
-        $prod_title =$row_pro['product_title'];
+        $prod_title =$row_pro['product_name'];
         $prod_price = $row_pro['product_price'];
         $prod_desc = $row_pro['product_desc'];
         $prod_image = $row_pro['product_image'];
-        $prod_keywords = $row_pro['product_keywords'];
 
         echo "
 
@@ -85,7 +80,7 @@ function get_products_by_brands() {
       $brand_id = $_GET['brand'];
 
       global $con;
-      $get_brand_pro = "select * from products where product_brand='$brand_id'";
+      $get_brand_pro = "select * from product where brand_id='$brand_id'";
       $run_pro = mysqli_query($con, $get_brand_pro);
 
       $product_count = mysqli_num_rows($run_pro);
@@ -95,13 +90,10 @@ function get_products_by_brands() {
 
       while ($row_brand_pro = mysqli_fetch_array($run_pro)) {
         $prod_id = $row_brand_pro['product_id'];
-        $prod_cat = $row_brand_pro['product_cat'];
-        $prod_brand = $row_brand_pro['product_brand'];
-        $prod_title =$row_brand_pro['product_title'];
+        $prod_title = $row_brand_pro['product_name'];
         $prod_price = $row_brand_pro['product_price'];
         $prod_desc = $row_brand_pro['product_desc'];
         $prod_image = $row_brand_pro['product_image'];
-        $prod_keywords = $row_brand_pro['product_keywords'];
 
         echo "
 
@@ -123,7 +115,7 @@ function get_products_by_categories() {
       $cat_id = $_GET['cat'];
 
       global $con;
-      $get_cat_pro = "select * from products where product_cat='$cat_id'";
+      $get_cat_pro = "select * from product where cat_id='$cat_id'";
       $run_pro = mysqli_query($con, $get_cat_pro);
 
       $product_count = mysqli_num_rows($run_pro);
@@ -133,13 +125,10 @@ function get_products_by_categories() {
 
       while ($row_cat_pro = mysqli_fetch_array($run_pro)) {
         $prod_id = $row_cat_pro['product_id'];
-        $prod_cat = $row_cat_pro['product_cat'];
-        $prod_brand = $row_cat_pro['product_brand'];
-        $prod_title =$row_cat_pro['product_title'];
+        $prod_title =$row_cat_pro['product_name'];
         $prod_price = $row_cat_pro['product_price'];
         $prod_desc = $row_cat_pro['product_desc'];
         $prod_image = $row_cat_pro['product_image'];
-        $prod_keywords = $row_cat_pro['product_keywords'];
 
         echo "
 
@@ -165,12 +154,12 @@ function get_details() {
 
     $product_id = $_GET['prod_id'];
 
-    $get_pro = "select * from products where product_id='$product_id'";
+    $get_pro = "select * from product where product_id='$product_id'";
     $run_pro = mysqli_query($con, $get_pro);
 
     while ($row_pro = mysqli_fetch_array($run_pro)) {
       $prod_id = $row_pro['product_id'];
-      $prod_title = $row_pro['product_title'];
+      $prod_title = $row_pro['product_name'];
       $prod_price = $row_pro['product_price'];
       $prod_desc = $row_pro['product_desc'];
       $prod_image = $row_pro['product_image'];
@@ -202,18 +191,15 @@ function get_products_results() {
       $search_query = $_GET['user_query'];
 
       global $con;
-      $get_pro = "select * from products where product_keywords like '%$search_query%'";
+      $get_pro = "select * from products where product_name like '%$search_query%'";
       $run_pro = mysqli_query($con, $get_pro);
 
       while ($row_pro = mysqli_fetch_array($run_pro)) {
         $prod_id = $row_pro['product_id'];
-        $prod_cat = $row_pro['product_cat'];
-        $prod_brand = $row_pro['product_brand'];
-        $prod_title =$row_pro['product_title'];
+        $prod_title =$row_pro['product_name'];
         $prod_price = $row_pro['product_price'];
         $prod_desc = $row_pro['product_desc'];
         $prod_image = $row_pro['product_image'];
-        $prod_keywords = $row_pro['product_keywords'];
 
         echo "
 
@@ -230,94 +216,94 @@ function get_products_results() {
     }
 }
 
-function cart() {
-
-  if(isset($_GET['add_cart'])) {
-
-  	global $con;
-
-  	$ip = getIp();
-  	$pro_id = $_GET['add_cart'];
-  	$check_pro = "select * from cart where ip_addr='$ip' AND p_id='$pro_id'";
-  	$run_check = mysqli_query($con, $check_pro);
-
-  	if(mysqli_num_rows($run_check)>0){
-  	echo "";
-
-  } else {
-
-	   $insert_pro = "insert into cart (p_id,ip_addr) values ('$pro_id','$ip')";
-     $run_pro = mysqli_query($con, $insert_pro);
-	   echo "<script>window.open('index.php','_self')</script>";
-
-	}
-
-  }
-
-}
-
-
-function total_items(){
-
-  if(isset($_GET['add_cart'])) {
-
-    global $con;
-    $ip = getIp();
-    $get_items = "select * from cart where ip_addr='$ip'";
-    $run_items = mysqli_query($con, $get_items);
-    $count_items = mysqli_num_rows($run_items);
-
-  } else {
-
-    global $con;
-
-    $ip = getIp();
-    $get_items = "select * from cart where ip_addr='$ip'";
-    $run_items = mysqli_query($con, $get_items);
-    $count_items = mysqli_num_rows($run_items);
-
-   }
-
-   echo $count_items;
- }
-
- function total_price(){
-
-   $total = 0;
-
-   global $con;
-
-   $ip = getIp();
-
-   $sel_price = "select * from cart where ip_addr='$ip'";
-
-   $run_price = mysqli_query($con, $sel_price);
-
-   while($p_price=mysqli_fetch_array($run_price)){
-
-     $pro_id = $p_price['p_id'];
-
-     $pro_price = "select * from products where product_id='$pro_id'";
-
-     $run_pro_price = mysqli_query($con,$pro_price);
-
-     while ($pp_price = mysqli_fetch_array($run_pro_price)){
-
-     $product_price = array($pp_price['product_price']);
-
-     $values = array_sum($product_price);
-
-     $total +=$values;
-
-     }
-
-
-   }
-
-   echo "$" . $total;
-
-
- }
+// function cart() {
+//
+//   if(isset($_GET['add_cart'])) {
+//
+//   	global $con;
+//
+//   	$ip = getIp();
+//   	$pro_id = $_GET['add_cart'];
+//   	$check_pro = "select * from cart where ip_addr='$ip' AND p_id='$pro_id'";
+//   	$run_check = mysqli_query($con, $check_pro);
+//
+//   	if(mysqli_num_rows($run_check)>0){
+//   	echo "";
+//
+//   } else {
+//
+// 	   $insert_pro = "insert into cart (p_id,ip_addr) values ('$pro_id','$ip')";
+//      $run_pro = mysqli_query($con, $insert_pro);
+// 	   echo "<script>window.open('index.php','_self')</script>";
+//
+// 	}
+//
+//   }
+//
+// }
+//
+//
+// function total_items(){
+//
+//   if(isset($_GET['add_cart'])) {
+//
+//     global $con;
+//     $ip = getIp();
+//     $get_items = "select * from cart where ip_addr='$ip'";
+//     $run_items = mysqli_query($con, $get_items);
+//     $count_items = mysqli_num_rows($run_items);
+//
+//   } else {
+//
+//     global $con;
+//
+//     $ip = getIp();
+//     $get_items = "select * from cart where ip_addr='$ip'";
+//     $run_items = mysqli_query($con, $get_items);
+//     $count_items = mysqli_num_rows($run_items);
+//
+//    }
+//
+//    echo $count_items;
+//  }
+//
+//  function total_price(){
+//
+//    $total = 0;
+//
+//    global $con;
+//
+//    $ip = getIp();
+//
+//    $sel_price = "select * from cart where ip_addr='$ip'";
+//
+//    $run_price = mysqli_query($con, $sel_price);
+//
+//    while($p_price=mysqli_fetch_array($run_price)){
+//
+//      $pro_id = $p_price['p_id'];
+//
+//      $pro_price = "select * from products where product_id='$pro_id'";
+//
+//      $run_pro_price = mysqli_query($con,$pro_price);
+//
+//      while ($pp_price = mysqli_fetch_array($run_pro_price)){
+//
+//      $product_price = array($pp_price['product_price']);
+//
+//      $values = array_sum($product_price);
+//
+//      $total +=$values;
+//
+//      }
+//
+//
+//    }
+//
+//    echo "$" . $total;
+//
+//
+//  }
 
 
 

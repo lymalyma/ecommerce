@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <?php
-  // include("functions/functions.php");
-
-  $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-  $functions_path = "$root/Ecommerce_tuto/functions/functions.php";
-  include $functions_path;
-
-
+   $path = $_SERVER['DOCUMENT_ROOT'];
+   $path = $path . "/ecommerce_app/functions/";
+   include($path . "functions.php");
 ?>
 <html>
   <head>
@@ -29,7 +25,7 @@
       <!-- Header wrapper ends here -->
 
       <!-- Nav bar starts here -->
-        <?php include 'navbar.php' ?>
+      <?php include 'navbar.php' ?>
         <!-- Nav bar ends here -->
 
 
@@ -50,11 +46,9 @@
           <div id="content-area">
             <div id="shopping_cart">
               <span style="font-size:18px; padding:5px; line-height:40px;">
-                Welcome Guest! Items: <?php total_items(); ?> Total: <?php total_price(); ?>
+                Welcome Guest! Items: <!-- add total_items(), total_price -->
                 <a href="cart.php" id="cart_icon"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></span>
             </div>
-
-            <?php cart(); ?>
 
 
             <div id="products_box">
